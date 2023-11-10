@@ -1,13 +1,52 @@
-import { Engine } from "./interfaces/Car";
+import { aboutPage } from "./views/about";
+import { contactPage } from "./views/contact";
+import { homePage } from "./views/home";
 
-const engine1: Engine = {
-  horsePowers: 120,
-  make: "VW",
+type RouterMap = {
+  [key: string]: string;
 };
 
-const engine2: Engine = {
-  horsePowers: 220,
-  make: "Audi",
+const router: RouterMap = {
+  "/": homePage,
+  "/about": aboutPage,
+  "/contact": contactPage,
 };
-console.log(engine1);
-console.log(engine2);
+
+const rootDiv = document.getElementById("root");
+
+
+// On mount - render
+if (rootDiv) {
+  rootDiv.innerHTML = router[window.location.pathname];
+}
+
+// Callback function
+const onNavigate = (pathname: string) => {
+  const { origin } = window.location;
+  console.log(`${origin}${pathname}`);
+
+  window.history.pushState({}, pathname, `${origin}${pathname}`);
+
+  if (rootDiv) {
+    rootDiv.innerHTML = router[pathname];
+  }
+};
+
+// Capture elements
+const homeAnchor = document.getElementById("home");
+const aboutAnchor = document.getElementById("about");
+const contactAnchor = document.getElementById("contact");
+
+// Event listener attachment
+homeAnchor?.addEventListener("click", () => {
+  onNavigate("/");
+});
+
+aboutAnchor?.addEventListener("click", () => {
+  onNavigate("/about");
+});
+
+contactAnchor?.addEventListener("click", () => {
+  onNavigate("/contact");
+});
+
